@@ -6,6 +6,14 @@ Inherits Application
 		  
 		  App.AutoQuit = True
 		  
+		  // Read Settings
+		  
+		  
+		  // Set Encoding
+		  cueReadEncoding = Encodings.ShiftJIS
+		  
+		  
+		  // Read Files
 		  Dim args() As String
 		  args = Split(System.CommandLine, """ """)
 		  args.Remove(0)
@@ -32,11 +40,42 @@ Inherits Application
 
 
 	#tag Method, Flags = &h1
+		Protected Sub cueFileLoad(file As FolderItem)
+		  
+		  Dim cue As TextInputStream
+		  
+		  cue = TextInputStream.Open(file)
+		  
+		  If file <> Nil And file.Exists Then
+		    
+		    cue.Encoding = cueReadEncoding
+		    
+		    Dim s As String
+		    
+		    While Not cue.EOF
+		      
+		      s = cue.ReadLine
+		      
+		    Wend
+		    
+		    
+		    
+		    
+		  End If
+		  
+		  cue.Close
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub fileCueAdd(file As FolderItem)
 		  
 		  fileCueList.Append(file)
-		  frmMain.lstFile.AddRow(file.Name)
 		  
+		  cueFileLoad(file)
+		  
+		  frmMain.lstFile.AddRow(file.Name)
 		  
 		End Sub
 	#tag EndMethod
@@ -81,8 +120,8 @@ Inherits Application
 		Sub fileListClear(mode As UInt8)
 		  
 		  // 10 - args
-		  // 100 - Menu
-		  // 110 - Button
+		  // 100 - btnAddFile
+		  // 110 - btnAddFolder
 		  // 200 - From lstFile
 		  
 		  
@@ -115,6 +154,10 @@ Inherits Application
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h1
+		Protected cueReadEncoding As TextEncoding
+	#tag EndProperty
 
 	#tag Property, Flags = &h1
 		Protected fileCueList() As FolderItem

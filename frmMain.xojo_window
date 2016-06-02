@@ -76,6 +76,68 @@ Begin Window frmMain
       _ScrollOffset   =   0
       _ScrollWidth    =   -1
    End
+   Begin PushButton btnAddFile
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "add file"
+      Default         =   False
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   269
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "メイリオ"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   14
+      Underline       =   False
+      Visible         =   True
+      Width           =   80
+   End
+   Begin PushButton btnAddFolder
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "add folder"
+      Default         =   False
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   389
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "メイリオ"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   14
+      Underline       =   False
+      Visible         =   True
+      Width           =   80
+   End
 End
 #tag EndWindow
 
@@ -114,6 +176,57 @@ End
 		  App.fileListClear(200)
 		  
 		  App.fileList(files)
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnAddFile
+	#tag Event
+		Sub Action()
+		  
+		  Dim cueType As New FileType
+		  cueType.Name = "application/x-cue"
+		  cueType.MacType = "CUE "
+		  cueType.MacCreator = "CUEf"
+		  cueType.Extensions = ".cue"
+		  
+		  Dim dlg As New OpenDialog
+		  Dim f As FolderItem
+		  #If Not TargetLinux Then
+		    dlg.InitialDirectory = SpecialFolder.Documents
+		  #Else
+		    dlg.InitialDirectory = SpecialFolder.Home
+		  #Endif
+		  
+		  dlg.Title = "Select a Cue file"
+		  dlg.Filter = cueType
+		  dlg.MultiSelect = True
+		  
+		  f = dlg.ShowModal
+		  If f <> Nil Then
+		    Dim files() As FolderItem
+		    For i As Integer = 0 To dlg.Count - 1
+		      files.Append(dlg.Item(i))
+		    Next
+		    App.fileListClear(100)
+		    App.fileList(files)
+		  End If
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnAddFolder
+	#tag Event
+		Sub Action()
+		  
+		  Dim f As FolderItem
+		  f = SelectFolder
+		  If f <> Nil Then
+		    App.fileListClear(110)
+		    App.fileList(array(f))
+		  End If
 		  
 		  
 		End Sub
